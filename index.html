@@ -14,7 +14,6 @@
         input, select { width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; outline: none; }
         input:focus, select:focus { border: 1px solid var(--gold); }
         
-        /* Updated Button Style for high visibility */
         button { 
             width: 100%; padding: 18px; 
             background: var(--gold); color: var(--navy); 
@@ -100,44 +99,24 @@
 
         let paymentSection = "";
         if (plink && plink.trim() !== "") {
-            paymentSection = `
-                <div style="margin: 20px 0; padding: 10px; border: 1px dashed #999; background: #f9f9f9; font-size: 13px;">
-                    <p style="margin: 0; color: #555; font-weight: bold;">Payment Details:</p>
-                    <p style="margin: 5px 0;">${plink}</p>
-                </div>`;
+            paymentSection = `<div style="margin: 20px 0; padding: 10px; border: 1px dashed #999; background: #f9f9f9; font-size: 13px;"><p style="margin: 0; color: #555; font-weight: bold;">Payment Details:</p><p style="margin: 5px 0;">${plink}</p></div>`;
         }
 
-        const receiptHTML = `
-            <html>
-            <body style="font-family: 'Times New Roman', serif; background: #fff; padding: 40px;">
-                <div style="border: 5px double #000033; padding: 30px; max-width: 500px; margin: auto; box-sizing: border-box;">
-                    <h1 style="text-align: center; color: #000033; font-size: 28px; margin: 0;">${bn.toUpperCase()}</h1>
-                    <p style="text-align: center; font-size: 14px; margin-top: 5px;">OFFICIAL RECEIPT</p>
-                    <hr style="border: 0.5px solid #000;">
-                    <div style="font-size: 15px;">
-                        <p><strong>Date:</strong> ${date}</p>
-                        <p><strong>Received From:</strong> ${n}</p>
-                        <p><strong>Payment For:</strong> ${d}</p>
-                        <p><strong>Payment Method:</strong> ${mop}</p>
-                    </div>
-                    ${paymentSection}
-                    <div style="margin: 30px 0; padding: 15px; background: #f0f0f0; border: 1px solid #000;">
-                        <span style="font-size: 16px;"><strong>TOTAL PAID:</strong></span>
-                        <span style="font-size: 20px; float: right;"><strong>${curr} ${parseFloat(p).toLocaleString()}</strong></span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 40px;">
-                        <div style="width: 48%;"><p style="font-size: 12px; margin: 0;">Received By:</p>
-                        <p style="border-bottom: 1px solid #000; margin-top: 5px; padding-bottom: 2px;">${rb}</p></div>
-                        <div style="width: 48%;"><p style="font-size: 12px; margin: 0;">Signature:</p>
-                        <p style="border-bottom: 1px dashed #000; margin-top: 25px;"></p></div>
-                    </div>
-                </div>
-            </body>
-            </html>`;
+        const receiptHTML = `<html><body style="font-family: 'Times New Roman', serif; background: #fff; padding: 40px;"><div style="border: 5px double #000033; padding: 30px; max-width: 500px; margin: auto; box-sizing: border-box;"><h1 style="text-align: center; color: #000033; font-size: 28px; margin: 0;">${bn.toUpperCase()}</h1><p style="text-align: center; font-size: 14px; margin-top: 5px;">OFFICIAL RECEIPT</p><hr style="border: 0.5px solid #000;"><div style="font-size: 15px;"><p><strong>Date:</strong> ${date}</p><p><strong>Received From:</strong> ${n}</p><p><strong>Payment For:</strong> ${d}</p><p><strong>Payment Method:</strong> ${mop}</p></div>${paymentSection}<div style="margin: 30px 0; padding: 15px; background: #f0f0f0; border: 1px solid #000;"><span style="font-size: 16px;"><strong>TOTAL PAID:</strong></span><span style="font-size: 20px; float: right;"><strong>${curr} ${parseFloat(p).toLocaleString()}</strong></span></div><div style="display: flex; justify-content: space-between; margin-top: 40px;"><div style="width: 48%;"><p style="font-size: 12px; margin: 0;">Received By:</p><p style="border-bottom: 1px solid #000; margin-top: 5px; padding-bottom: 2px;">${rb}</p></div><div style="width: 48%;"><p style="font-size: 12px; margin: 0;">Signature:</p><p style="border-bottom: 1px dashed #000; margin-top: 25px;"></p></div></div></div></body></html>`;
         
         const win = window.open("", "_blank");
-        if (win) { win.document.write(receiptHTML); win.document.close(); }
-        else { alert("Please allow pop-ups."); }
+        if (win) { 
+            win.document.write(receiptHTML); 
+            win.document.close(); 
+            
+            // Auto-clear dynamic fields
+            document.getElementById('n').value = "";
+            document.getElementById('d').value = "";
+            document.getElementById('p').value = "";
+            document.getElementById('plink').value = "";
+        } else { 
+            alert("Please allow pop-ups for this site to generate the receipt."); 
+        }
     }
 </script>
 </body>
