@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProInvoice</title>
+    <style>
+        :root { --navy: #000033; --gold: #d4af37; --bg: #000022; --input-bg: #000055; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; background: var(--navy); padding: 30px; border-radius: 12px; border: 2px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; }
+        h1 { text-align: center; letter-spacing: 3px; border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0; font-size: 26px; color: var(--gold); }
+        .label { font-size: 11px; text-transform: uppercase; margin-bottom: 5px; display: block; opacity: 0.9; letter-spacing: 1px; color: var(--gold); }
+        .input-group { margin-bottom: 15px; }
+        input, select { width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; outline: none; }
+        input:focus, select:focus { border: 1px solid var(--gold); }
+        
+        /* Updated Button Style for high visibility */
+        button { 
+            width: 100%; padding: 18px; 
+            background: var(--gold); color: var(--navy); 
+            border: none; font-weight: bold; font-size: 18px; 
+            cursor: pointer; border-radius: 6px; 
+            transition: 0.3s; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            margin-top: 10px;
+        }
+        button:hover { background: #fff; box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2); }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PROINVOICE</h1>
+    
+    <div class="input-group">
+        <span class="label">Business Name</span>
+        <input type="text" id="bn" placeholder="Your Business Name">
+    </div>
+    <div class="input-group">
+        <span class="label">Client Name</span>
+        <input type="text" id="n" placeholder="Client Name">
+    </div>
+    <div class="input-group">
+        <span class="label">Description</span>
+        <input type="text" id="d" placeholder="Service or Product">
+    </div>
+    <div class="input-group">
+        <span class="label">Amount & Currency</span>
+        <div style="display: flex; gap: 10px;">
+            <select id="curr" style="width: 40%;">
+                <option value="$">USD</option>
+                <option value="MK">MWK</option>
+                <option value="ZMW">ZMW</option>
+                <option value="₦">NGN</option>
+                <option value="R">ZAR</option>
+                <option value="£">GBP</option>
+                <option value="€">EUR</option>
+                <option value="KSh">KES</option>
+                <option value="CFA">CFA</option>
+            </select>
+            <input type="number" id="p" placeholder="0.00" style="width: 60%;">
+        </div>
+    </div>
+    <div class="input-group">
+        <span class="label">Mode of Payment</span>
+        <select id="mop">
+            <option value="Cash">Cash</option>
+            <option value="Mobile Money">Mobile Money</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Card">Card</option>
+        </select>
+    </div>
+    <div class="input-group">
+        <span class="label">Payment Link / Details</span>
+        <input type="text" id="plink" placeholder="Grey.co link or Bank Details">
+    </div>
+    <div class="input-group">
+        <span class="label">Received By</span>
+        <input type="text" id="rb" placeholder="Staff/Owner Name">
+    </div>
+    
+    <button onclick="generateReceipt()">GENERATE OFFICIAL RECEIPT</button>
+</div>
+
+<script>
+    function generateReceipt() {
+        const bn = document.getElementById('bn').value;
+        const n = document.getElementById('n').value;
+        const d = document.getElementById('d').value;
+        const p = document.getElementById('p').value;
+        const curr = document.getElementById('curr').value;
+        const mop = document.getElementById('mop').value;
+        const plink = document.getElementById('plink').value;
+        const rb = document.getElementById('rb').value;
+        const date = new Date().toLocaleString();
+
+        if(!n || !d || !p || !rb || !bn) return alert("Please complete all fields.");
+
+        let paymentSection = "";
+        if (plink && plink.trim() !== "") {
+            paymentSection = `
+                <div style="margin: 20px 0; padding: 10px; border: 1px dashed #999; background: #f9f9f9; font-size: 13px;">
+                    <p style="margin: 0; color: #555; font-weight: bold;">Payment Details:</p>
+                    <p style="margin: 5px 0;">${plink}</p>
+                </div>`;
+        }
+
+        const receiptHTML = `
+            <html>
+            <body style="font-family: 'Times New Roman', serif; background: #fff; padding: 40px;">
+                <div style="border: 5px double #000033; padding: 30px; max-width: 500px; margin: auto; box-sizing: border-box;">
+                    <h1 style="text-align: center; color: #000033; font-size: 28px; margin: 0;">${bn.toUpperCase()}</h1>
+                    <p style="text-align: center; font-size: 14px; margin-top: 5px;">OFFICIAL RECEIPT</p>
+                    <hr style="border: 0.5px solid #000;">
+                    <div style="font-size: 15px;">
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Received From:</strong> ${n}</p>
+                        <p><strong>Payment For:</strong> ${d}</p>
+                        <p><strong>Payment Method:</strong> ${mop}</p>
+                    </div>
+                    ${paymentSection}
+                    <div style="margin: 30px 0; padding: 15px; background: #f0f0f0; border: 1px solid #000;">
+                        <span style="font-size: 16px;"><strong>TOTAL PAID:</strong></span>
+                        <span style="font-size: 20px; float: right;"><strong>${curr} ${parseFloat(p).toLocaleString()}</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+                        <div style="width: 48%;"><p style="font-size: 12px; margin: 0;">Received By:</p>
+                        <p style="border-bottom: 1px solid #000; margin-top: 5px; padding-bottom: 2px;">${rb}</p></div>
+                        <div style="width: 48%;"><p style="font-size: 12px; margin: 0;">Signature:</p>
+                        <p style="border-bottom: 1px dashed #000; margin-top: 25px;"></p></div>
+                    </div>
+                </div>
+            </body>
+            </html>`;
+        
+        const win = window.open("", "_blank");
+        if (win) { win.document.write(receiptHTML); win.document.close(); }
+        else { alert("Please allow pop-ups."); }
+    }
+</script>
+</body>
+</html>
